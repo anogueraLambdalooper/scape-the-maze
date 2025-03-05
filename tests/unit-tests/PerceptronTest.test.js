@@ -13,7 +13,15 @@ const g = () => {
     return output;
 }
 
-const perceptron = new Perceptron(inputs, weights, bias, g);
+const perceptron = new Perceptron(weights, bias, g);
+
+test('The weights of the perceptron are from 4 to 0', () => {
+    expect(perceptron.weights).toEqual(weights);
+})
+
+test('The bias should be 1', () => {
+    expect(perceptron.bias).toEqual(bias);
+})
 
 test('The output of the perceptron is 11', () => {
     expect(perceptron.getOutput()).toBe(11);

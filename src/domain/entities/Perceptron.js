@@ -1,6 +1,5 @@
 ﻿class Perceptron {
-    constructor(inputs, weights, bias, activationFunction) {
-        this.inputs = inputs;
+    constructor(weights, bias, activationFunction) {
         this.weights = weights;
         this.bias = bias;
         this.activationFunction = activationFunction;
