@@ -1,21 +1,13 @@
 ﻿class Perceptron {
-    constructor(inputs, weights, bias) {
+    constructor(inputs, weights, bias, activationFunction) {
         this.inputs = inputs;
         this.weights = weights;
         this.bias = bias;
+        this.activationFunction = activationFunction;
     }
 
-    GetOutput() {
-        return this.ActivationFunction();
-    }
-
-    ActivationFunction() {
-        let output = 0;
-        for(let i = 0; i < this.inputs.length; i++) {
-            output += this.inputs[i] + this.weights[i];
-        }
-        output += this.bias;
-        return output;
+    getOutput() {
+        return this.activationFunction();
     }
 }
 
