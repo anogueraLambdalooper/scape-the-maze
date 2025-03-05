@@ -1,3 +1,3 @@
 ﻿export default {
-    base: '/scape-the-maze/',
+    base: '/scape-the-maze',
 };
