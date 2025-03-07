@@ -7,7 +7,7 @@ export class Perceptron {
 
     forward(input: number[]): number {
         if(input.length !== this.weights.length) {
-            throw new Error("More Inputs than weights");
+            throw new Error("Missmatch between inputs and weights length");
         }
 
         let output: number = 0;
