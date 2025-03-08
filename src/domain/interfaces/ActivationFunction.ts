@@ -1,4 +1,4 @@
 ﻿export interface ActivationFunction {
-    activate(input: number): number;
-    derivative(x: number): number;
+  activate(input: number): number;
+  derivative(input: number): number;
 }

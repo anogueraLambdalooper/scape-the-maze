@@ -1,14 +1,16 @@
-﻿import {ActivationFunction} from "../interfaces/ActivationFunction.ts";
+﻿import { ActivationFunction } from "../interfaces/ActivationFunction.ts";
 
 export class Tanh implements ActivationFunction {
+  activate(input: number): number {
+    const ex = Math.exp(input);
+    const e_x = Math.exp(-input);
 
-    activate(input: number): number {
-        let output: number = 0;
+    return (ex - e_x) / (ex + e_x);
+  }
 
-        output = (Math.exp(input) - Math.exp(input * -1));
-        output /= (Math.exp(input) + Math.exp(input * -1));
-
-        return output;
-    }
-
+  derivative(input: number): number {
+    // tanh'(x) = 1 - tanh²(x)
+    const tanhValue = this.activate(input);
+    return 1 - tanhValue * tanhValue;
+  }
 }
