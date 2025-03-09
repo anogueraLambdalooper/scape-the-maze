@@ -121,4 +121,75 @@ describe("PerceptronTest", () => {
     expect(mockPerceptron.weights[1]).not.toEqual(oldWeights[1]);
     expect(mockPerceptron.bias).not.toEqual(oldBias);
   });
+
+  it("Should have updated the weights and the bias on the backward pass using Sigmoid AF", () => {
+    let inputs = [2, 1];
+    let weights = [4, 3];
+    let oldWeights = [4, 3];
+    let oldBias = 1;
+
+    let bias = 1;
+    let learningRate = 10;
+    let target = 0.5; //Sigmoid target must be between 0 and 1
+    mockActivationFunction = new Sigmoid();
+
+    mockPerceptron = new Perceptron(
+        weights,
+        bias,
+        mockActivationFunction,
+        learningRate
+    );
+
+    mockPerceptron.backward(inputs, target);
+
+    expect(mockPerceptron.weights[0]).not.toEqual(oldWeights[0]);
+    expect(mockPerceptron.weights[1]).not.toEqual(oldWeights[1]);
+    expect(mockPerceptron.bias).not.toEqual(oldBias);
+  });
+
+  it("Should have updated the weights and the bias on the backward pass using ReLU AF", () => {
+    let inputs = [2, 1];
+    let weights = [4, 3];
+    let oldWeights = [4, 3];
+    let oldBias = 1;
+
+    let bias = 1;
+    let learningRate = 10;
+    let target = 0.5; //ReLU target must not be negative
+    mockActivationFunction = new ReLU();
+
+    mockPerceptron = new Perceptron(
+        weights,
+        bias,
+        mockActivationFunction,
+        learningRate
+    );
+
+    mockPerceptron.backward(inputs, target);
+
+    expect(mockPerceptron.weights[0]).not.toEqual(oldWeights[0]);
+    expect(mockPerceptron.weights[1]).not.toEqual(oldWeights[1]);
+    expect(mockPerceptron.bias).not.toEqual(oldBias);
+  });
+
+  it("Should have updated gradient on the backward", () => {
+    let inputs = [2, 1];
+    let weights = [4, 3];
+
+    let bias = 1;
+    let learningRate = 10;
+    let target = 0.5;
+    mockActivationFunction = new ReLU();
+
+    mockPerceptron = new Perceptron(
+        weights,
+        bias,
+        mockActivationFunction,
+        learningRate
+    );
+
+    mockPerceptron.backward(inputs, target);
+
+    expect(mockPerceptron.getLocalGradient).not.toEqual(0);
+  });
 });

@@ -1,50 +1,62 @@
-﻿import { ActivationFunction } from "../interfaces/ActivationFunction.ts";
+﻿import {ActivationFunction} from "../interfaces/ActivationFunction.ts";
 
 export class Perceptron {
-  constructor(
-    public weights: number[],
-    public bias: number,
-    public activationFunction: ActivationFunction,
-    public learningRate: number
-  ) {}
+    private localGradient: number = 0;
 
-  forward(input: number[]): number {
-    if (input.length !== this.weights.length) {
-      throw new Error("Missmatch between inputs and weights length");
+    constructor(
+        public weights: number[],
+        public bias: number,
+        public activationFunction: ActivationFunction,
+        public learningRate: number
+    ) {
     }
 
-    let output: number = 0;
-    for (let i = 0; i < input.length; i++) {
-      output += input[i] * this.weights[i];
-    }
-    output += this.bias;
+    forward(input: number[]): number {
+        if (input.length !== this.weights.length) {
+            throw new Error("Missmatch between inputs and weights length");
+        }
 
-    return this.activationFunction.activate(output);
-  }
+        let output: number = 0;
+        for (let i = 0; i < input.length; i++) {
+            output += input[i] * this.weights[i];
+        }
+        output += this.bias;
 
-  backward(input: number[], target: number): void {
-    if (input.length !== this.weights.length) {
-      throw new Error("Missmatch between inputs and weights length");
-    }
-
-    let preActivationOutput: number = 0;
-    for (let i = 0; i < input.length; i++) {
-      preActivationOutput += input[i] * this.weights[i];
+        return this.activationFunction.activate(output);
     }
 
-    preActivationOutput += this.bias;
+    backward(input: number[], target: number): void {
+        if (input.length !== this.weights.length) {
+            throw new Error("Missmatch between inputs and weights length");
+        }
 
-    let output: number = this.activationFunction.activate(preActivationOutput);
+        //Output of the perceptron before activation.
+        const preActivationOutput = input.reduce(
+            (sum, val, i) => sum + val * this.weights[i],
+            this.bias
+        );
 
-    let error: number = target - output;
+        //Error calculation
+        let output: number = this.activationFunction.activate(preActivationOutput);
+        let error: number = target - output;
 
-    let delta: number =
-      error * this.activationFunction.derivative(preActivationOutput);
+        //Calculate localGradient
+        this.localGradient = error * this.activationFunction.derivative(preActivationOutput);
 
-    for (let i = 0; i < input.length; i++) {
-      this.weights[i] += this.learningRate * delta * input[i];
+        //Update the weights with this localGradient
+        this.updateWeights(input);
     }
 
-    this.bias += this.learningRate * delta;
-  }
+    getLocalGradient(): number {
+        return this.localGradient;
+    }
+
+    private updateWeights(input: number[]): void {
+        for (let i = 0; i < input.length; i++) {
+            const gradient = this.learningRate * this.localGradient * input[i];
+            this.weights[i] += gradient;
+        }
+
+        this.bias += this.learningRate * this.localGradient;
+    }
 }
