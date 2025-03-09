@@ -1,7 +1,7 @@
 ﻿import {ActivationFunction} from "../interfaces/ActivationFunction.ts";
 
 export class Perceptron {
-    private localGradient: number = 0;
+    public localGradient: number = 0;
 
     constructor(
         public weights: number[],
@@ -52,10 +52,9 @@ export class Perceptron {
     }
 
     private updateWeights(input: number[]): void {
-        for (let i = 0; i < input.length; i++) {
-            const gradient = this.learningRate * this.localGradient * input[i];
-            this.weights[i] += gradient;
-        }
+        this.weights = this.weights.map((weight, i) =>
+            weight + this.learningRate * this.localGradient * input[i]
+        );
 
         this.bias += this.learningRate * this.localGradient;
     }

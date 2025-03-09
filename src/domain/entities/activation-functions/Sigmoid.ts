@@ -1,4 +1,4 @@
-﻿import { ActivationFunction } from "../interfaces/ActivationFunction.ts";
+﻿import { ActivationFunction } from "../../interfaces/ActivationFunction.ts";
 
 export class Sigmoid implements ActivationFunction {
   activate(input: number): number {

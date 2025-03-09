@@ -1,10 +1,10 @@
 ﻿import { Perceptron } from "../../src/domain/entities/Perceptron";
 import { ActivationFunction } from "../../src/domain/interfaces/ActivationFunction";
-import { Tanh } from "../../src/domain/entities/Tanh";
-import { ReLU } from "../../src/domain/entities/ReLU";
-import { Sigmoid } from "../../src/domain/entities/Sigmoid";
+import { Tanh } from "../../src/domain/entities/activation-functions/Tanh";
+import { ReLU } from "../../src/domain/entities/activation-functions/ReLU";
+import { Sigmoid } from "../../src/domain/entities/activation-functions/Sigmoid";
 
-describe("PerceptronTest", () => {
+describe("Perceptron", () => {
   let mockPerceptron: Perceptron;
   let mockActivationFunction: ActivationFunction;
 
