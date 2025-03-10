@@ -190,6 +190,6 @@ describe("Perceptron", () => {
 
     mockPerceptron.backward(inputs, target);
 
-    expect(mockPerceptron.getLocalGradient).not.toEqual(0);
+    expect(mockPerceptron.localGradient).not.toEqual(0);
   });
 });

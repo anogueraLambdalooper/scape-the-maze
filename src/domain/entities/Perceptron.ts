@@ -31,31 +31,29 @@ export class Perceptron {
         }
 
         //Output of the perceptron before activation.
-        const preActivationOutput = input.reduce(
-            (sum, val, i) => sum + val * this.weights[i],
-            this.bias
-        );
+        let preActivationOutput: number = 0;
+        for (let i = 0; i < input.length; i++) {
+            preActivationOutput += input[i] * this.weights[i];
+        }
+        preActivationOutput += this.bias;
 
         //Error calculation
         let output: number = this.activationFunction.activate(preActivationOutput);
-        let error: number = target - output;
+        let errorGradient: number = output - target;
 
         //Calculate localGradient
-        this.localGradient = error * this.activationFunction.derivative(preActivationOutput);
+        const gradient = errorGradient * this.activationFunction.derivative(preActivationOutput);
 
         //Update the weights with this localGradient
-        this.updateWeights(input);
+        this.updateWeights(input, gradient);
     }
 
-    getLocalGradient(): number {
-        return this.localGradient;
-    }
+    private updateWeights(input: number[], errorGradient: number): void {
 
-    private updateWeights(input: number[]): void {
-        this.weights = this.weights.map((weight, i) =>
-            weight + this.learningRate * this.localGradient * input[i]
-        );
+        for(let i = 0; i < this.weights.length; i++){
+            this.weights[i] -= this.learningRate * errorGradient * input[i];
+        }
 
-        this.bias += this.learningRate * this.localGradient;
+        this.bias -= this.learningRate * errorGradient;
     }
 }
