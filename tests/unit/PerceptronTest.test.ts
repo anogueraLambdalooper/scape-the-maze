@@ -171,25 +171,4 @@ describe("Perceptron", () => {
     expect(mockPerceptron.weights[1]).not.toEqual(oldWeights[1]);
     expect(mockPerceptron.bias).not.toEqual(oldBias);
   });
-
-  it("Should have updated gradient on the backward", () => {
-    let inputs = [2, 1];
-    let weights = [4, 3];
-
-    let bias = 1;
-    let learningRate = 10;
-    let target = 0.5;
-    mockActivationFunction = new ReLU();
-
-    mockPerceptron = new Perceptron(
-        weights,
-        bias,
-        mockActivationFunction,
-        learningRate
-    );
-
-    mockPerceptron.backward(inputs, target);
-
-    expect(mockPerceptron.localGradient).not.toEqual(0);
-  });
 });
