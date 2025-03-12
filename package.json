@@ -10,7 +10,12 @@
     "test": "jest"
   },
   "dependencies": {
-    "expect": "^29.7.0"
+    "canvas": "^3.1.0",
+    "chart.js": "^4.4.8",
+    "expect": "^29.7.0",
+    "fs": "^0.0.1-security",
+    "gpu": "^1.0.0",
+    "react-chartjs-2": "^5.3.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.14",

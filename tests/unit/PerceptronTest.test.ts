@@ -12,14 +12,12 @@ describe("Perceptron", () => {
     let inputs = [0, 1, 4];
     let weights = [4, 3];
     let bias = 1;
-    let learningRate = 0.1;
     mockActivationFunction = new Tanh();
 
     mockPerceptron = new Perceptron(
       weights,
       bias,
-      mockActivationFunction,
-      learningRate
+      mockActivationFunction
     );
 
     expect(() => mockPerceptron.forward(inputs)).toThrow(
@@ -31,14 +29,12 @@ describe("Perceptron", () => {
     let inputs = [0, 1];
     let weights = [4, 3, 2];
     let bias = 1;
-    let learningRate = 0.1;
     mockActivationFunction = new Tanh();
 
     mockPerceptron = new Perceptron(
       weights,
       bias,
-      mockActivationFunction,
-      learningRate
+      mockActivationFunction
     );
 
     expect(() => mockPerceptron.forward(inputs)).toThrow(
@@ -50,14 +46,12 @@ describe("Perceptron", () => {
     let inputs = [0, 1];
     let weights = [4, 3];
     let bias = 1;
-    let learningRate = 0.1;
     mockActivationFunction = new Tanh();
 
     mockPerceptron = new Perceptron(
       weights,
       bias,
-      mockActivationFunction,
-      learningRate
+      mockActivationFunction
     );
 
     expect(mockPerceptron.forward(inputs)).toBeCloseTo(0.9993);
@@ -73,8 +67,7 @@ describe("Perceptron", () => {
     mockPerceptron = new Perceptron(
       weights,
       bias,
-      mockActivationFunction,
-      learningRate
+      mockActivationFunction
     );
 
     expect(mockPerceptron.forward(inputs)).toBe(4);
@@ -84,14 +77,12 @@ describe("Perceptron", () => {
     let inputs = [0, 1];
     let weights = [4, 3];
     let bias = 1;
-    let learningRate = 0.1;
     mockActivationFunction = new Sigmoid();
 
     mockPerceptron = new Perceptron(
       weights,
       bias,
-      mockActivationFunction,
-      learningRate
+      mockActivationFunction
     );
 
     expect(mockPerceptron.forward(inputs)).toBeCloseTo(0.982);
@@ -111,11 +102,10 @@ describe("Perceptron", () => {
     mockPerceptron = new Perceptron(
       weights,
       bias,
-      mockActivationFunction,
-      learningRate
+      mockActivationFunction
     );
 
-    mockPerceptron.backward(inputs, target);
+    mockPerceptron.backward(inputs, target, learningRate);
 
     expect(mockPerceptron.weights[0]).not.toEqual(oldWeights[0]);
     expect(mockPerceptron.weights[1]).not.toEqual(oldWeights[1]);
@@ -136,11 +126,10 @@ describe("Perceptron", () => {
     mockPerceptron = new Perceptron(
         weights,
         bias,
-        mockActivationFunction,
-        learningRate
+        mockActivationFunction
     );
 
-    mockPerceptron.backward(inputs, target);
+    mockPerceptron.backward(inputs, target, learningRate);
 
     expect(mockPerceptron.weights[0]).not.toEqual(oldWeights[0]);
     expect(mockPerceptron.weights[1]).not.toEqual(oldWeights[1]);
@@ -161,11 +150,10 @@ describe("Perceptron", () => {
     mockPerceptron = new Perceptron(
         weights,
         bias,
-        mockActivationFunction,
-        learningRate
+        mockActivationFunction
     );
 
-    mockPerceptron.backward(inputs, target);
+    mockPerceptron.backward(inputs, target, learningRate);
 
     expect(mockPerceptron.weights[0]).not.toEqual(oldWeights[0]);
     expect(mockPerceptron.weights[1]).not.toEqual(oldWeights[1]);

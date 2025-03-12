@@ -12,8 +12,7 @@ describe("Perceptron Perfomance", () => {
         const perceptron = new Perceptron(
             weights,
             bias,
-            mockActivationFunction,
-            0.001
+            mockActivationFunction
         );
 
         for(let i = 0; i < 1000000; i++) {

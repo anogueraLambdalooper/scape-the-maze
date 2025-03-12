@@ -10,13 +10,13 @@ export class Linear implements Layer {
                 out_features: number,
                 activationFunction: ActivationFunction,
                 bias: number = 1,
-                learningRate: number = 0.1) {
+                private learningRate: number = 0.1) {
 
         this.perceptrons = Array.from({length: out_features}, () => {
             const weights = Array(in_features).fill(0).map(() =>
                 Math.random() * 2 - 1
             );
-            return new Perceptron(weights, bias, activationFunction, learningRate);
+            return new Perceptron(weights, bias, activationFunction);
         });
     }
 
@@ -47,7 +47,7 @@ export class Linear implements Layer {
 
         // 3. Update weights and bias for each perceptron in layer
         this.perceptrons.forEach((perceptron, i) => {
-            perceptron.backward(this.lastInput, targets[i]);
+            perceptron.backward(this.lastInput, targets[i], this.learningRate);
         });
 
         return inputGradients;

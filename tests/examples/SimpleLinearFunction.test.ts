@@ -1,9 +1,10 @@
 ﻿import {Perceptron} from "../../src/domain/entities/Perceptron";
 import {IdentityActivationFunction} from "../../src/domain/entities/activation-functions/IdentityActivationFunction";
-import {Sigmoid} from "../../src/domain/entities/activation-functions/Sigmoid";
-import {ReLU} from "../../src/domain/entities/activation-functions/ReLU";
+import {CanvasService} from "../../src/application/services/CanvasService";
 
 describe("Linear Function", () => {
+    const errorMargin: number = 0.001;
+    const learningRate: number = 0.001;
 
     //y=2x
     it("Should arrive to the solution of y=2x", () => {
@@ -14,29 +15,40 @@ describe("Linear Function", () => {
         const perceptron = new Perceptron(
             weights,
             bias,
-            mockActivationFunction,
-            0.0001
+            mockActivationFunction
         );
+
+        let epochs = 0;
+        let errorsHistory = [];
 
         while(true) {
             let input = [(Math.random() - 0.5) * 100] //Input space from -50 to 50
-            let target = 2 * input[0]
+            let target = 2 * input[0] // w=2 & b=0
             const output = perceptron.forward(input);
 
             const error = target - output;
+            errorsHistory.push(error);
+            epochs++;
 
-            if (Math.abs(error) < 0.01) {
+            if (Math.abs(error) < errorMargin) {
                 console.info("Error", Math.abs(error));
                 console.info("WEIGHTS", perceptron.weights, perceptron.bias);
                 console.info("Solved!");
                 break;
             }
 
-            perceptron.backward(input, target);
+            perceptron.backward(input, target, learningRate);
         }
+
+        const canvas = new CanvasService();
+        canvas.printCanvas(errorsHistory, epochs, "Should arrive to the solution of y=2x");
     });
 
     it("Should arrive to the solution of y=2x + 3", () => {
+        function target(input: number) : number {
+            return 2 * input + 3;
+        }
+
         let weights = [0];
         let bias = 0;
         const mockActivationFunction = new IdentityActivationFunction();
@@ -44,29 +56,36 @@ describe("Linear Function", () => {
         const perceptron = new Perceptron(
             weights,
             bias,
-            mockActivationFunction,
-            0.0001
+            mockActivationFunction
         );
+
+        let epochs = 0;
+        let errorsHistory = [];
 
         while(true) {
             let input = [(Math.random() - 0.5) * 100] //Input space from -50 to 50
-            let target = 2 * input[0] + 3
+            let target_value = target(input[0]); // ha de conseguir un w = 2 y un b = 3
             const output = perceptron.forward(input);
 
-            const error = target - output;
+            const error = target_value - output;
+            errorsHistory.push(error);
+            epochs++;
 
-            if (Math.abs(error) < 0.01) {
+            if (Math.abs(error) < errorMargin) {
                 console.info("Error", Math.abs(error));
                 console.info("WEIGHTS", perceptron.weights, perceptron.bias);
                 console.info("Solved!");
                 break;
             }
 
-            perceptron.backward(input, target);
+            perceptron.backward(input, target_value, learningRate);
         }
+
+        const canvas = new CanvasService();
+        canvas.printCanvas(errorsHistory, epochs, "Should arrive to the solution of y=2x + 3");
     });
 
-    it("Should arrive to the solution of y=x * x + 2", () => {
+    it("Should arrive to the solution of y=2x in bigger range", () => {
         let weights = [0];
         let bias = 0;
         const mockActivationFunction = new IdentityActivationFunction();
@@ -74,147 +93,201 @@ describe("Linear Function", () => {
         const perceptron = new Perceptron(
             weights,
             bias,
-            mockActivationFunction,
-            0.0001
+            mockActivationFunction
         );
 
+        let epochs = 0;
+        let errorsHistory = [];
+
         while(true) {
-            let input = [(Math.random() - 0.5) * 100] //Input space from -50 to 50
-            let target = input[0] * input[0] + 2
+            let input = [(Math.random() - 0.5) * 100] //Input space from -500 to 500
+            let target = 2 * input[0] // w=2 & b=0
             const output = perceptron.forward(input);
 
-            const error = target - output;
+            const error = output - target;
 
-            if (Math.abs(error) < 0.01) {
+            errorsHistory.push(error);
+            epochs++;
+
+            if (Math.abs(error) < errorMargin) {
+
                 console.info("Error", Math.abs(error));
                 console.info("WEIGHTS", perceptron.weights, perceptron.bias);
                 console.info("Solved!");
                 break;
             }
 
-            perceptron.backward(input, target);
+            perceptron.backward(input, target, 0.00001);
         }
+
+        const canvas = new CanvasService();
+        canvas.printCanvas(errorsHistory, epochs, "Should arrive to the solution of y=2x in bigger range");
     });
 
-    it("Should arrive to the solution of y=x**2/(1 + x**2) with a Sigmoid", () => {
+    it("Should arrive to the solution of y=2x+3 in bigger range", () => {
         let weights = [0];
         let bias = 0;
-        const mockActivationFunction = new Sigmoid();
+        const mockActivationFunction = new IdentityActivationFunction();
 
         const perceptron = new Perceptron(
             weights,
             bias,
-            mockActivationFunction,
-            0.1
+            mockActivationFunction
         );
 
+        let epochs = 0;
+        let errorsHistory = [];
+
         while(true) {
-            let input = [(Math.random() - 0.5) * 100] //Input space from -50 to 50
-            let target = input[0] ** 2 / (1 + input[0] ** 2);
+            let input = [(Math.random() - 0.5) * 100] //Input space from -500 to 500
+            let target = 2 * input[0] + 3 // w=2 & b=3
             const output = perceptron.forward(input);
 
-            const error = target - output;
-            console.log(Math.abs(error));
+            const error = output - target;
+            errorsHistory.push(error);
+            epochs++;
 
-            if (Math.abs(error) < 0.01) {
+            if (Math.abs(error) < errorMargin) {
+
                 console.info("Error", Math.abs(error));
                 console.info("WEIGHTS", perceptron.weights, perceptron.bias);
                 console.info("Solved!");
                 break;
             }
 
-            perceptron.backward(input, target);
+            perceptron.backward(input, target, 0.00001);
+        }
+
+        const canvas = new CanvasService();
+        canvas.printCanvas(errorsHistory, epochs, "Should arrive to the solution of y=2x+3 in bigger range");
+    });
+
+    it("Should arrive to the solution of y=2x in a even bigger range", () => {
+        let weights = [0];
+        let bias = 0;
+        const mockActivationFunction = new IdentityActivationFunction();
+
+        const perceptron = new Perceptron(
+            weights,
+            bias,
+            mockActivationFunction
+        );
+
+        let epochs = 0;
+        let errorsHistory = [];
+
+        while(true) {
+            let input = [(Math.random() - 0.5) * 1000] //Input space from -5000 to 5000
+            let target = 2 * input[0] // w=2 & b=0
+            const output = perceptron.forward(input);
+
+            const error = output - target;
+
+            errorsHistory.push(error);
+            epochs++;
+
+            if (Math.abs(error) < errorMargin) {
+
+                console.info("Error", Math.abs(error));
+                console.info("WEIGHTS", perceptron.weights, perceptron.bias);
+                console.info("Solved!");
+                break;
+            }
+
+            perceptron.backward(input, target, 0.0000001);
+        }
+
+        const canvas = new CanvasService();
+        canvas.printCanvas(errorsHistory, epochs, "Should arrive to the solution of y=2x in a even bigger range");
+    });
+
+    it("Should arrive to the solution of y=2x+3 in an even bigger range", () => {
+        let weights = [0];
+        let bias = 0;
+        const mockActivationFunction = new IdentityActivationFunction();
+
+        const perceptron = new Perceptron(
+            weights,
+            bias,
+            mockActivationFunction
+        );
+
+        while(true) {
+            let input = [(Math.random() - 0.5) * 1000] //Input space from -5000 to 5000
+            let target = 2 * input[0] + 3 // w=2 & b=3
+            const output = perceptron.forward(input);
+
+            const error = output - target;
+
+            if (Math.abs(error) < errorMargin) {
+
+                console.info("Error", Math.abs(error));
+                console.info("WEIGHTS", perceptron.weights, perceptron.bias);
+                console.info("Solved!");
+                break;
+            }
+
+            perceptron.backward(input, target, 0.0000001);
         }
     });
 
-    it("Should arrive to the solution of max(0, 2x+3) with ReLU", () => {
+    it("Should arrive to the solution of y=2x in a even muuuuuuch bigger range", () => {
         let weights = [0];
-        let bias = 1;
-        const mockActivationFunction = new ReLU();
+        let bias = 0;
+        const mockActivationFunction = new IdentityActivationFunction();
 
         const perceptron = new Perceptron(
             weights,
             bias,
-            mockActivationFunction,
-            0.1
+            mockActivationFunction
         );
 
         while(true) {
-            let input = [(Math.random() - 0.5) * 100] //Input space from -50 to 50
-            let target = Math.max(0, 2 * input[0] + 3);
+            let input = [(Math.random() - 0.5) * 10000] //Input space from -50000 to 50000
+            let target = 2 * input[0] // w=2 & b=0
             const output = perceptron.forward(input);
 
-            const error = target - output;
+            const error = output - target;
 
-            if (Math.abs(error) < 0.01) {
+            if (Math.abs(error) < errorMargin) {
+
                 console.info("Error", Math.abs(error));
                 console.info("WEIGHTS", perceptron.weights, perceptron.bias);
                 console.info("Solved!");
                 break;
             }
 
-            perceptron.backward(input, target);
+            perceptron.backward(input, target, 0.000000001);
         }
     });
 
-    it("Should arrive to the solution of max(0, sin(x)) with ReLU", () => {
+    it("Should arrive to the solution of y=2x+3 in an even muuuuuuch bigger range", () => {
         let weights = [0];
-        let bias = 1;
-        const mockActivationFunction = new ReLU();
+        let bias = 0;
+        const mockActivationFunction = new IdentityActivationFunction();
 
         const perceptron = new Perceptron(
             weights,
             bias,
-            mockActivationFunction,
-            0.1
+            mockActivationFunction
         );
 
         while(true) {
-            let input = [(Math.random() - 0.5) * 100] //Input space from -50 to 50
-            let target = Math.max(0, Math.sin(input[0]));
+            let input = [(Math.random() - 0.5) * 10000] //Input space from -50000 to 50000
+            let target = 2 * input[0] + 3 // w=2 & b=3
             const output = perceptron.forward(input);
 
-            const error = target - output;
+            const error = output - target;
 
-            if (Math.abs(error) < 0.01) {
+            if (Math.abs(error) < errorMargin) {
+
                 console.info("Error", Math.abs(error));
                 console.info("WEIGHTS", perceptron.weights, perceptron.bias);
                 console.info("Solved!");
                 break;
             }
 
-            perceptron.backward(input, target);
-        }
-    });
-
-    it("Should arrive to the solution of tanh(0.5 * x) with ReLU", () => {
-        let weights = [0];
-        let bias = 1;
-        const mockActivationFunction = new ReLU();
-
-        const perceptron = new Perceptron(
-            weights,
-            bias,
-            mockActivationFunction,
-            0.001
-        );
-
-        while(true) {
-            let input = [(Math.random() - 0.5) * 100] //Input space from -50 to 50
-            let target = Math.tanh(0.5 * input[0]);
-            const output = perceptron.forward(input);
-
-            const error = target - output;
-            console.info("Error in curse", error);
-
-            if (Math.abs(error) < 0.01) {
-                console.info("Error", Math.abs(error));
-                console.info("WEIGHTS", perceptron.weights, perceptron.bias);
-                console.info("Solved!");
-                break;
-            }
-
-            perceptron.backward(input, target);
+            perceptron.backward(input, target, 0.000000001);
         }
     });
 })
