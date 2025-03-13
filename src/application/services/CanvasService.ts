@@ -13,14 +13,19 @@ export class CanvasService {
         this.canvas = createCanvas(this.width, this.height);
     }
 
-    public printCanvas(errors: number[], epochs: number, canvasName: string) {
+    public printCanvas(errors: number[], losses: number[], epochs: number, canvasName: string, epochsHistory?: number[]) {
         const ctx = this.canvas.getContext("2d");
 
         if (!ctx) {
             throw new Error("No se pudo obtener el contexto del canvas");
         }
-
-        const epochsArray = Array.from({length: epochs}, (_, i) => i);
+        let epochsArray: number[] = [];
+        if(epochsHistory) {
+            epochsArray = epochsHistory;
+        }
+        else{
+            epochsArray = Array.from({length: epochs}, (_, i) => i);
+        }
 
         const config: ChartConfiguration = {
             type: "line",
@@ -32,6 +37,13 @@ export class CanvasService {
                         data: errors,
                         borderColor: "red",
                         backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        tension: 0.3,
+                    },
+                    {
+                        label: "Loss vs Época",
+                        data: losses,
+                        borderColor: "cyan",
+                        backgroundColor: "blue",
                         tension: 0.3,
                     },
                 ],
