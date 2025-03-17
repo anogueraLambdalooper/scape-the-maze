@@ -1,5 +1,7 @@
 ﻿import {Perceptron} from "../entities/Perceptron.ts";
 
 export interface Optimizer {
-    applyGradients(perceptron: Perceptron, learningRate: number, regularization: number, momentum: number): void;
+    updateLearningRate(epoch: number): number;
+    initializeMomentum(weightsLength: number): void;
+    update(perceptron: Perceptron, gradient: number[], gradientB: number, learningRate: number): void;
 }

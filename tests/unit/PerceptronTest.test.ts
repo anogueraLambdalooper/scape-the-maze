@@ -61,7 +61,6 @@ describe("Perceptron", () => {
     let inputs = [0, 1];
     let weights = [4, 3];
     let bias = 1;
-    let learningRate = 0.1;
     mockActivationFunction = new ReLU();
 
     mockPerceptron = new Perceptron(
