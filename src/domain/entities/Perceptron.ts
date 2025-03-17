@@ -1,4 +1,5 @@
 ﻿import {ActivationFunction} from "../interfaces/ActivationFunction.ts";
+import { Optimizer } from "../interfaces/Optimizer.ts";
 
 export class Perceptron {
     public localGradient: number = 0;
@@ -32,17 +33,16 @@ export class Perceptron {
         return this.activationFunction.activate(output);
     }
 
-    updateGradients(inputs: number[]) {
-        const output = this.forward(inputs);
+    updateGradients(input: number[], output: number) {
 
         for(let i = 0; i < this.weights.length; i++) {
-            this.costGradientW[i] += inputs[i] + output;
+            this.costGradientW[i] += input[i] + output;
         }
 
         this.costGradientB += output;
     }
 
-    /*backward(input: number[], target: number, learningRate:number): void {
+    backward(input: number[], datasetLength: number, learningRate:number, regularization: number, momentum: number, optimizer: Optimizer): void {
         if (input.length !== this.weights.length) {
             throw new Error("Missmatch between inputs and weights length");
         }
@@ -56,21 +56,21 @@ export class Perceptron {
 
         //Error calculation
         let output: number = this.activationFunction.activate(preActivationOutput);
-        let errorGradient: number = output - target;
+        //let errorGradient: number = output - target;
 
         //Calculate localGradient
-        const gradient = errorGradient * this.activationFunction.derivative(preActivationOutput);
-
-        //Update the weights with this localGradient
-        this.updateWeights(input, gradient, learningRate);
+        //const gradient = errorGradient * this.activationFunction.derivative(preActivationOutput);
+        
+        this.updateGradients(input, output);         
+        optimizer.applyGradients(this, learningRate / datasetLength, regularization, momentum);
     }
 
-    private updateWeights(input: number[], errorGradient: number, learningRate: number): void {
+    // private updateWeights(input: number[], errorGradient: number, learningRate: number): void {
 
-        for(let i = 0; i < this.weights.length; i++){
-            this.weights[i] -= learningRate * errorGradient * input[i];
-        }
+    //     for(let i = 0; i < this.weights.length; i++){
+    //         this.weights[i] -= learningRate * errorGradient * input[i];
+    //     }
 
-        this.bias -= learningRate * errorGradient;
-    }*/
+    //     this.bias -= learningRate * errorGradient;
+    // }
 }

@@ -18,6 +18,8 @@ export class PerceptronTrainer implements Trainer {
                  const output = perceptron.forward([element])
                  const error = target - output;
 
+                 console.log("error value -> ", error);
+
                  epochs++;
                  lossHistory.push(lossFunction.evaluate(output, target));
 
@@ -30,9 +32,7 @@ export class PerceptronTrainer implements Trainer {
                      return;
                  }
 
-                 perceptron.updateGradients([element]);
-                 //perceptron.backward([element], target, this.optimizer.optimize(learningRate, 0.5, 100, epochs));
-                 this.optimizer.applyGradients([perceptron], learningRate / traningDataset.length, regularization, momentum);
+                 perceptron.backward([element], traningDataset.length, learningRate, regularization, momentum, this.optimizer);
              }
         }
     }
