@@ -1,7 +1,7 @@
 ﻿import {IdentityActivationFunction} from "../../src/domain/entities/activation-functions/IdentityActivationFunction";
 import {Perceptron} from "../../src/domain/entities/Perceptron";
 import {PerceptronTrainer} from "../../src/domain/entities/training/PerceptronTrainer";
-import {BatchGradientDescent} from "../../src/domain/entities/BatchGradientDescent";
+import {SGD} from "../../src/domain/entities/optimizers/SGD";
 import {MeanSquareErrorLossFunction} from "../../src/domain/entities/training/MeanSquareErrorLossFunction";
 
 describe("Trainer Tests", (): void => {
@@ -24,7 +24,7 @@ describe("Trainer Tests", (): void => {
             activationFunction,
         );
 
-        let trainer = new PerceptronTrainer(new BatchGradientDescent());
-        trainer.train(learningRate, errorMargin, perceptron, lossFunction, trainingDataset, targetFunction);
+        let trainer = new PerceptronTrainer(new SGD());
+        trainer.train(learningRate, errorMargin, perceptron, lossFunction, trainingDataset, targetFunction, 0, 0.01);
     })
 })

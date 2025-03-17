@@ -2,12 +2,20 @@
 
 export class Perceptron {
     public localGradient: number = 0;
+    public weightVelocities: number[];
+    public biasVelocity: number;
+    public costGradientW: number[];
+    public costGradientB: number;
 
     constructor(
         public weights: number[],
         public bias: number,
         public activationFunction: ActivationFunction
     ) {
+        this.weightVelocities = Array(weights.length).fill(0);
+        this.costGradientW = Array(weights.length).fill(0);
+        this.costGradientB = 0;
+        this.biasVelocity = 0;
     }
 
     forward(input: number[]): number {
@@ -24,8 +32,17 @@ export class Perceptron {
         return this.activationFunction.activate(output);
     }
 
-    //TODO: PUT LEARNING RATE AS PARAMETER
-    backward(input: number[], target: number, learningRate:number): void {
+    updateGradients(inputs: number[]) {
+        const output = this.forward(inputs);
+
+        for(let i = 0; i < this.weights.length; i++) {
+            this.costGradientW[i] += inputs[i] + output;
+        }
+
+        this.costGradientB += output;
+    }
+
+    /*backward(input: number[], target: number, learningRate:number): void {
         if (input.length !== this.weights.length) {
             throw new Error("Missmatch between inputs and weights length");
         }
@@ -55,5 +72,5 @@ export class Perceptron {
         }
 
         this.bias -= learningRate * errorGradient;
-    }
+    }*/
 }

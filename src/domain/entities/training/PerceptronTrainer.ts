@@ -1,14 +1,14 @@
 ﻿import {Trainer} from "../../interfaces/Trainer.ts";
 import {Perceptron} from "../Perceptron.ts";
 import {Optimizer} from "../../interfaces/Optimizer.ts";
-import {LossFunction} from "../../interfaces/LossFunction.ts";
 import {CanvasService} from "../../../application/services/CanvasService.ts";
+import {LossFunction} from "../../interfaces/LossFunction.ts";
 
 export class PerceptronTrainer implements Trainer {
 
     constructor(public optimizer: Optimizer){}
 
-    public train(learningRate: number, errorMargin: number, perceptron: Perceptron, lossFunction: LossFunction, traningDataset: number[], targetFunction: Function): void {
+    public train(learningRate: number, errorMargin: number, perceptron: Perceptron, lossFunction: LossFunction, traningDataset: number[], targetFunction: Function, regularization: number, momentum: number): void {
         let epochs = 0;
         let lossHistory = [];
 
@@ -30,7 +30,9 @@ export class PerceptronTrainer implements Trainer {
                      return;
                  }
 
-                 perceptron.backward([element], target, this.optimizer.optimize(learningRate, 0.5, 100, epochs));
+                 perceptron.updateGradients([element]);
+                 //perceptron.backward([element], target, this.optimizer.optimize(learningRate, 0.5, 100, epochs));
+                 this.optimizer.applyGradients([perceptron], learningRate / traningDataset.length, regularization, momentum);
              }
         }
     }

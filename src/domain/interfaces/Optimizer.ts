@@ -1,3 +1,5 @@
-﻿export interface Optimizer {
-    optimize(initialLearningRate: number, drop: number, dropRate: number, iteration: number): number;
+﻿import {Perceptron} from "../entities/Perceptron.ts";
+
+export interface Optimizer {
+    applyGradients(perceptrons: Perceptron[], learningRate: number, regularization: number, momentum: number): void;
 }
