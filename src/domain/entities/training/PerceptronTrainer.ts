@@ -3,12 +3,13 @@ import {Perceptron} from "../Perceptron.ts";
 import {Optimizer} from "../../interfaces/Optimizer.ts";
 import {CanvasService} from "../../../application/services/CanvasService.ts";
 import {LossFunction} from "../../interfaces/LossFunction.ts";
+import { ActivationFunction } from "../../interfaces/ActivationFunction.ts";
 
 export class PerceptronTrainer implements Trainer {
 
     constructor(public optimizer: Optimizer){}
 
-    public train(errorMargin: number, perceptron: Perceptron, lossFunction: LossFunction, traningDataset: number[], targetFunction: Function): void {
+    public train(errorMargin: number, perceptron: Perceptron, lossFunction: LossFunction, traningDataset: number[], targetFunction: Function, activationFunction: ActivationFunction): boolean {
         let epochs = 0;
         let lossHistory = [];
 
@@ -17,7 +18,9 @@ export class PerceptronTrainer implements Trainer {
             console.log("Epochs: " + epochs);
             for (const element of traningDataset) {
                 let target = targetFunction(element);
-                const output = perceptron.forward([element]);
+
+                const preActivationOutput = perceptron.forward([element]);
+                const output = activationFunction.activate(preActivationOutput);
                 const error = target - output;
 
                 lossHistory.push(lossFunction.evaluate(output, target));
@@ -28,7 +31,7 @@ export class PerceptronTrainer implements Trainer {
                     console.info("Solved!");
                     const canvas = new CanvasService();
                     canvas.printCanvas([], lossHistory, epochs, "Should arrive to the solution of y=2x");
-                    return;
+                    return true;
                 }
 
                 const adaptiveLearningRate = this.optimizer.updateLearningRate(epochs);
@@ -37,7 +40,10 @@ export class PerceptronTrainer implements Trainer {
                     this.optimizer.initializeMomentum(perceptron.weights.length);
                 }
 
-                perceptron.backward([element], target, adaptiveLearningRate, this.optimizer);
+                const errorGradient = perceptron.backward(target, output);
+                const gradient = errorGradient * activationFunction.derivative(preActivationOutput);
+                const weightGradients = element * gradient;
+                this.optimizer.update(perceptron, weightGradients, gradient, adaptiveLearningRate);
             }
         }
     }

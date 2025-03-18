@@ -22,11 +22,11 @@ export class SGD implements Optimizer {
         }
     }
 
-    update(perceptron: Perceptron, gradient: number[], gradientB: number, learningRate: number): void {
+    update(perceptron: Perceptron, weightGradient: number, gradientB: number, learningRate: number): void {
         if (this.momentumVelocity.length === 0) return;
 
         for (let i = 0; i < perceptron.weights.length; i++) {
-            this.momentumVelocity[i] = this.momentum * this.momentumVelocity[i] + gradient[i];
+            this.momentumVelocity[i] = this.momentum * this.momentumVelocity[i] + weightGradient;
             perceptron.weights[i] -= learningRate * this.momentumVelocity[i];
         }
 

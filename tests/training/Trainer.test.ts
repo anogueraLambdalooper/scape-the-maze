@@ -23,11 +23,12 @@ describe("Trainer Tests", (): void => {
 
         const perceptron = new Perceptron(
             weights,
-            bias,
-            activationFunction
+            bias
         );
 
         let trainer = new PerceptronTrainer(optimizer);
-        trainer.train(errorMargin, perceptron, lossFunction, trainingDataset, targetFunction);
+        const finished = trainer.train(errorMargin, perceptron, lossFunction, trainingDataset, targetFunction, activationFunction);
+
+        expect(finished).toBe(true);
     })
 })

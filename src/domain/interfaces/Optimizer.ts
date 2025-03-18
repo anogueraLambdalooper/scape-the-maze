@@ -3,5 +3,5 @@
 export interface Optimizer {
     updateLearningRate(epoch: number): number;
     initializeMomentum(weightsLength: number): void;
-    update(perceptron: Perceptron, gradient: number[], gradientB: number, learningRate: number): void;
+    update(perceptron: Perceptron, weightGradient: number, gradientB: number, learningRate: number): void;
 }
