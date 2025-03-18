@@ -71,4 +71,64 @@ describe("Perceptron", () => {
     expect(perceptron.forward(inputs)).toBe(-901);
   });
 
+  it("Output should be 190", () => {
+    let inputs = [-23, -5];
+    let weights = [-8, -2];
+    let bias = -4;
+
+    let perceptron = new Perceptron(
+        weights,
+        bias
+    );
+
+    expect(perceptron.forward(inputs)).toBe(190);
+  })
+
+  it("Backward should return value 0", () => {
+    let inputs = [-23, -5];
+    let weights = [-8, -2];
+    let bias = -4;
+
+    let perceptron = new Perceptron(
+        weights,
+        bias
+    );
+
+    let output = perceptron.forward(inputs);
+    let target = 190;
+
+    expect(perceptron.backward(target, output)).toBe(0);
+  })
+
+  it("Backward should return value -190", () => {
+    let inputs = [-23, -5];
+    let weights = [-8, -2];
+    let bias = -4;
+
+    let perceptron = new Perceptron(
+        weights,
+        bias
+    );
+
+    let output = perceptron.forward(inputs);
+    let target = 2 * output;
+
+    expect(perceptron.backward(target, output)).toBe(190);
+  })
+
+  it("Backward should return value 450.5", () => {
+    let inputs = [-4, -17];
+    let weights = [2, 55];
+    let bias = 42;
+
+    let perceptron = new Perceptron(
+        weights,
+        bias
+    );
+
+    let output = perceptron.forward(inputs);
+    let target = output/2;
+
+    expect(perceptron.backward(target, output)).toBe(450.5);
+  })
 });

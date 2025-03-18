@@ -14,11 +14,12 @@
         for (let i = 0; i < input.length; i++) {
             output += input[i] * this.weights[i];
         }
+        output += this.bias
 
-        return output += this.bias;
+        return output;
     }
 
     backward(target: number, output:number): number {
-        return output - target;
+        return target - output;
     }
 }
