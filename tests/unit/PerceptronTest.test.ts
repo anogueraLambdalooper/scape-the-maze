@@ -144,4 +144,36 @@ describe("Perceptron", () => {
 
     expect(perceptron.backward(target, output)).toBe(450.5);
   })
+
+  it("Backward should return value -912", () => {
+    let inputs = [-34, 5];
+    let weights = [-14, 29];
+    let bias = 294;
+
+    let perceptron = new Perceptron(
+        weights,
+        bias
+    );
+
+    let output = perceptron.forward(inputs);
+    let target = 3;
+
+    expect(perceptron.backward(target, output)).toBe(-912);
+  })
+
+  it("Output should be 915", () => {
+    let inputs = [-4, -17];
+    let weights = [2, 55];
+    let bias = 42;
+
+    let perceptron = new Perceptron(
+        weights,
+        bias
+    );
+
+    let output = perceptron.forward(inputs);
+    let target = 1000;
+
+    expect(perceptron.backward(target, output)).toBe(1901);
+  })
 });

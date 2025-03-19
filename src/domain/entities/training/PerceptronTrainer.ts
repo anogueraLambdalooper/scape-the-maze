@@ -15,7 +15,6 @@ export class PerceptronTrainer implements Trainer {
 
         while (true) {
             epochs++;
-            console.log("Epochs: " + epochs);
             for (const element of traningDataset) {
 
                 //guide
@@ -33,6 +32,7 @@ export class PerceptronTrainer implements Trainer {
                 const preActivationOutput = perceptron.forward([element]);
                 const output = activationFunction.activate(preActivationOutput);
                 /*******************/
+
                 /*loss from a criterion (in this case the lossFunction.evaluate()*/
                 const loss = lossFunction.evaluate(output, target);
 
@@ -48,16 +48,20 @@ export class PerceptronTrainer implements Trainer {
                 }
                 /*****************************************/
 
-                const adaptiveLearningRate = this.optimizer.updateLearningRate(epochs);
-
                 if (epochs === 1) {
                     this.optimizer.initializeMomentum(perceptron.weights.length);
                 }
 
+                /*equivalent to loss.backward()*/
                 const errorGradient = perceptron.backward(target, output);
+                /*******************************/
+
+                /*Equivalent to optimizer.step()*/
+                const adaptiveLearningRate = this.optimizer.updateLearningRate(epochs);
                 const gradient = errorGradient * activationFunction.derivative(preActivationOutput);
                 const weightGradients = element * gradient;
                 this.optimizer.update(perceptron, weightGradients, gradient, adaptiveLearningRate);
+                /*******************************/
             }
         }
     }
