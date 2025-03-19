@@ -84,6 +84,19 @@ describe("Perceptron", () => {
     expect(perceptron.forward(inputs)).toBe(190);
   })
 
+  it("Output should be 915", () => {
+    let inputs = [-34, 5];
+    let weights = [-14, 29];
+    let bias = 294;
+
+    let perceptron = new Perceptron(
+        weights,
+        bias
+    );
+
+    expect(perceptron.forward(inputs)).toBe(915);
+  })
+
   it("Backward should return value 0", () => {
     let inputs = [-23, -5];
     let weights = [-8, -2];
