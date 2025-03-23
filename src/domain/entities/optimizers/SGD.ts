@@ -1,36 +1,39 @@
 ﻿import { Optimizer } from "../../interfaces/Optimizer.ts";
-import {Perceptron} from "../Perceptron.ts";
 
 export class SGD implements Optimizer {
-    private momentumVelocity: number[];
+    private learningRate: number;
+    private momentum: number;
+    private velocities: number[];
     private biasVelocity: number;
 
-    constructor(public initialLearningRate: number, public decayRate: number = 0.001, public minLearningRate: number = 0.000001, public momentum: number = 0.9) {
-        this.momentumVelocity = [];
+    constructor(learningRate: number, momentum: number = 0.9) {
+        this.learningRate = learningRate;
+        this.momentum = momentum;
+        this.velocities = [];
         this.biasVelocity = 0;
     }
 
-    updateLearningRate(epoch: number): number {
-        let newLearningRate = this.initialLearningRate / (1 + this.decayRate * epoch);
-        return Math.max(newLearningRate, this.minLearningRate);
-    }
+    public updateParameters(parameters: number[], gradients: number[]): void {
+        if (this.velocities.length === 0) {
+            this.velocities = new Array(parameters.length).fill(0);
+        }
 
-    initializeMomentum(weightsLength: number): void {
-        if (this.momentumVelocity.length === 0) {
-            this.momentumVelocity = Array(weightsLength).fill(0);
-            this.biasVelocity = 0;
+        for (let i = 0; i < parameters.length; i++) {
+            this.velocities[i] = this.momentum * this.velocities[i] - this.learningRate * gradients[i];
+            parameters[i] += this.velocities[i];
         }
     }
 
-    update(perceptron: Perceptron, weightGradient: number, gradientB: number, learningRate: number): void {
-        if (this.momentumVelocity.length === 0) return;
+    public updateBias(bias: number, gradient: number): number {
+        this.biasVelocity = this.momentum * this.biasVelocity - this.learningRate * gradient;
+        return bias + this.biasVelocity;
+    }
 
-        for (let i = 0; i < perceptron.weights.length; i++) {
-            this.momentumVelocity[i] = this.momentum * this.momentumVelocity[i] + weightGradient;
-            perceptron.weights[i] -= learningRate * this.momentumVelocity[i];
-        }
+    public setLearningRate(learningRate: number): void {
+        this.learningRate = learningRate;
+    }
 
-        this.biasVelocity = this.momentum * this.biasVelocity + gradientB;
-        perceptron.bias -= learningRate * this.biasVelocity;
+    public getLearningRate(): number {
+        return this.learningRate;
     }
 }

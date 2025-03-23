@@ -1,7 +1,6 @@
-﻿import {Perceptron} from "../entities/Perceptron.ts";
-
-export interface Optimizer {
-    updateLearningRate(epoch: number): number;
-    initializeMomentum(weightsLength: number): void;
-    update(perceptron: Perceptron, weightGradient: number, gradientB: number, learningRate: number): void;
+﻿export interface Optimizer {
+    updateParameters(parameters: number[], gradients: number[]): void;
+    updateBias(bias: number, gradient: number): number;
+    setLearningRate(learningRate: number): void;
+    getLearningRate(): number;
 }

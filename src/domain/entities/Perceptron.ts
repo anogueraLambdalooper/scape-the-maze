@@ -20,6 +20,6 @@
     }
 
     backward(target: number, output:number): number {
-        return target - output;
+        return output - target;
     }
 }

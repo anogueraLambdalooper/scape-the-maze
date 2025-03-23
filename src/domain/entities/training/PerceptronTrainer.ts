@@ -4,10 +4,11 @@ import {Optimizer} from "../../interfaces/Optimizer.ts";
 import {CanvasService} from "../../../application/services/CanvasService.ts";
 import {LossFunction} from "../../interfaces/LossFunction.ts";
 import { ActivationFunction } from "../../interfaces/ActivationFunction.ts";
+import {Scheduler} from "../../interfaces/Scheduler.ts";
 
 export class PerceptronTrainer implements Trainer {
 
-    constructor(public optimizer: Optimizer){}
+    constructor(public optimizer: Optimizer, public scheduler: Scheduler){}
 
     public train(errorMargin: number, perceptron: Perceptron, lossFunction: LossFunction, traningDataset: number[], targetFunction: Function, activationFunction: ActivationFunction): boolean {
         let epochs = 0;
@@ -16,16 +17,6 @@ export class PerceptronTrainer implements Trainer {
         while (true) {
             epochs++;
             for (const element of traningDataset) {
-
-                //guide
-                //output = model.forward(text, offsets)
-                //loss = criterion(output, label)
-                //loss.backward()
-                //optimizer.step()
-
-                //train_loss += loss.item() * len(output)
-                //train_acc += (output.argmax(1) == label).sum().item()
-
                 let target = targetFunction(element);
 
                 /*PERCEPTRON FORWARD*/
@@ -48,19 +39,19 @@ export class PerceptronTrainer implements Trainer {
                 }
                 /*****************************************/
 
-                if (epochs === 1) {
-                    this.optimizer.initializeMomentum(perceptron.weights.length);
-                }
-
                 /*equivalent to loss.backward()*/
                 const errorGradient = perceptron.backward(target, output);
                 /*******************************/
 
                 /*Equivalent to optimizer.step()*/
-                const adaptiveLearningRate = this.optimizer.updateLearningRate(epochs);
                 const gradient = errorGradient * activationFunction.derivative(preActivationOutput);
                 const weightGradients = element * gradient;
-                this.optimizer.update(perceptron, weightGradients, gradient, adaptiveLearningRate);
+
+                const currentLearningRate = this.scheduler.getLearningRate(epochs);
+                this.optimizer.setLearningRate(currentLearningRate);
+                this.optimizer.updateParameters(perceptron.weights, [weightGradients]);
+                perceptron.bias = this.optimizer.updateBias(perceptron.bias, gradient);
+                console.log("WEIGHTS", perceptron.weights, perceptron.bias);
                 /*******************************/
             }
         }
