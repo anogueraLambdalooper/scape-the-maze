@@ -14,7 +14,7 @@ export class PerceptronTrainer implements Trainer {
         let epochs = 0;
         let lossHistory = [];
 
-        while (true) {
+        while (epochs < 101) {
             epochs++;
             for (const element of traningDataset) {
                 let target = targetFunction(element);
@@ -55,5 +55,9 @@ export class PerceptronTrainer implements Trainer {
                 /*******************************/
             }
         }
+
+        const canvas = new CanvasService();
+        canvas.printCanvas([], lossHistory, epochs, "Should arrive to the solution of y=2x");
+        return false;
     }
 }

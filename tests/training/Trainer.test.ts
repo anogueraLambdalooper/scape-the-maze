@@ -7,9 +7,9 @@ import {ExponentialDecay} from "../../src/domain/entities/optimizers/Exponential
 
 describe("Trainer Tests", (): void => {
     const errorMargin: number = 0.001;
-    const learningRate: number = 0.001;
+    const learningRate: number = 0.0001;
 
-    it("Should train with adaptativeLearningRate and from -50 to 50 as input with a linear activation function", () => {
+    it("Should train with 2x and from -50 to 50 as input with a linear activation function", () => {
         let weights: number[] = [0];
         let bias: number = 0;
         const activationFunction = new IdentityActivationFunction();
@@ -34,7 +34,32 @@ describe("Trainer Tests", (): void => {
         expect(finished).toBe(true);
     })
 
-    it("Should train with adaptativeLearningRate and from -500 to 500 as input with a linear activation function", () => {
+    it("Should train with 2x + 3 and from -50 to 50 as input with a linear activation function", () => {
+        let weights: number[] = [0];
+        let bias: number = 0;
+        const activationFunction = new IdentityActivationFunction();
+        const lossFunction = new MeanSquareErrorLossFunction();
+        const trainingDataset = Array(300).fill(0).map(() =>
+            (Math.random() - 0.5) * 100
+        );
+        const targetFunction: Function = (input: number) => 2 * input + 3;
+        let decay = 0.9;
+
+        const optimizer = new SGD(learningRate);
+        const scheduler = new ExponentialDecay(learningRate, decay)
+
+        const perceptron = new Perceptron(
+            weights,
+            bias
+        );
+
+        let trainer = new PerceptronTrainer(optimizer, scheduler);
+        const finished = trainer.train(errorMargin, perceptron, lossFunction, trainingDataset, targetFunction, activationFunction);
+
+        expect(finished).toBe(true);
+    })
+
+    it("Should not train train with 2x and from -500 to 500 as input with a linear activation function", () => {
         let weights: number[] = [0];
         let bias: number = 0;
         const activationFunction = new IdentityActivationFunction();
@@ -56,6 +81,6 @@ describe("Trainer Tests", (): void => {
         let trainer = new PerceptronTrainer(optimizer, scheduler);
         const finished = trainer.train(errorMargin, perceptron, lossFunction, trainingDataset, targetFunction, activationFunction);
 
-        expect(finished).toBe(true);
+        expect(finished).toBe(false);
     })
 })
