@@ -1,16 +1,16 @@
 ﻿import {Trainer} from "../../interfaces/Trainer.ts";
 import {Perceptron} from "../Perceptron.ts";
-import {Optimizer} from "../../interfaces/Optimizer.ts";
+import {PerceptronOptimizer} from "../../interfaces/PerceptronOptimizer.ts";
 import {CanvasService} from "../../../application/services/CanvasService.ts";
-import {LossFunction} from "../../interfaces/LossFunction.ts";
+import {PerceptronLossFunction} from "../../interfaces/PerceptronLossFunction.ts";
 import { ActivationFunction } from "../../interfaces/ActivationFunction.ts";
 import {Scheduler} from "../../interfaces/Scheduler.ts";
 
 export class PerceptronTrainer implements Trainer {
 
-    constructor(public optimizer: Optimizer, public scheduler: Scheduler){}
+    constructor(public optimizer: PerceptronOptimizer, public scheduler: Scheduler){}
 
-    public train(errorMargin: number, perceptron: Perceptron, lossFunction: LossFunction, traningDataset: number[], targetFunction: Function, activationFunction: ActivationFunction): boolean {
+    public train(errorMargin: number, perceptron: Perceptron, lossFunction: PerceptronLossFunction, traningDataset: number[], targetFunction: Function, activationFunction: ActivationFunction): boolean {
         let epochs = 0;
         let lossHistory = [];
 

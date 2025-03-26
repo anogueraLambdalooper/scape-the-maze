@@ -1,6 +1,6 @@
-﻿import { Optimizer } from "../../interfaces/Optimizer.ts";
+﻿import { PerceptronOptimizer } from "../../interfaces/PerceptronOptimizer.ts";
 
-export class SGD implements Optimizer {
+export class SGD implements PerceptronOptimizer {
     private learningRate: number;
     private momentum: number;
     private velocities: number[];
